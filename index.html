@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newport Writers - Jersey City Writing Club</title>
+    <meta name="description" content="A quiet space for writers, builders, and thinkers to create together in Jersey City.">
+    
+    <!-- Pico.css via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    
+    <style>
+        .hero {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        .meeting-info {
+            background-color: var(--pico-background-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        .next-meeting {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--pico-primary);
+        }
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--pico-muted-border-color);
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <!-- Header -->
+        <header class="hero">
+            <h1>Newport Writers</h1>
+            <p>A quiet space for writers, builders, and thinkers to create together in Jersey City.</p>
+        </header>
+
+        <!-- About Section -->
+        <section id="about">
+            <h2>About Us</h2>
+            <p>
+                Newport Writers is a welcoming community for anyone who loves to write, create, and think. 
+                Whether you're working on a novel, crafting poetry, building a project, or simply exploring 
+                ideas, our monthly meetups provide a supportive environment to focus on your work alongside 
+                fellow creators.
+            </p>
+            <p>
+                We meet regularly in Jersey City to write together, share progress, and inspire one another. 
+                All experience levels are welcome—from seasoned authors to those just starting their creative journey.
+            </p>
+        </section>
+
+        <!-- Next Meeting Info -->
+        <section id="meeting">
+            <h2>Next Meeting</h2>
+            <div class="meeting-info">
+                <p class="next-meeting" id="nextMeetingDate">Calculating next meeting date...</p>
+                <p id="meetingSchedule"></p>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button id="rsvpButton" onclick="handleRSVP()">RSVP for Next Meeting</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 Newport Writers. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <script>
+        // Function to calculate the next meeting date based on config
+        async function calculateNextMeeting() {
+            try {
+                // Fetch the meeting configuration
+                const response = await fetch('meeting-config.json');
+                const config = await response.json();
+                const schedule = config.meetingSchedule;
+                
+                // Display the meeting schedule description
+                const scheduleElement = document.getElementById('meetingSchedule');
+                scheduleElement.textContent = schedule.description;
+                
+                // Get current date
+                const today = new Date();
+                const currentMonth = today.getMonth();
+                const currentYear = today.getFullYear();
+                
+                // Function to find the nth occurrence of a day of week in a month
+                function getNthDayOfMonth(year, month, dayOfWeek, n) {
+                    const firstDay = new Date(year, month, 1);
+                    const firstDayOfWeek = firstDay.getDay();
+                    
+                    // Calculate the date of the first occurrence of the target day
+                    let daysUntilTarget = (dayOfWeek - firstDayOfWeek + 7) % 7;
+                    let firstOccurrence = 1 + daysUntilTarget;
+                    
+                    // Calculate the nth occurrence
+                    let targetDate = firstOccurrence + (n - 1) * 7;
+                    
+                    // Check if this date exists in the month
+                    const testDate = new Date(year, month, targetDate);
+                    if (testDate.getMonth() !== month) {
+                        return null; // Date doesn't exist in this month
+                    }
+                    
+                    return new Date(year, month, targetDate);
+                }
+                
+                // Try to find the next meeting
+                let nextMeeting = null;
+                
+                // Check current month
+                let candidateDate = getNthDayOfMonth(
+                    currentYear, 
+                    currentMonth, 
+                    schedule.dayOfWeek, 
+                    schedule.weekOfMonth
+                );
+                
+                if (candidateDate && candidateDate > today) {
+                    nextMeeting = candidateDate;
+                }
+                
+                // If no valid date in current month, check next months
+                if (!nextMeeting) {
+                    for (let i = 1; i <= 12; i++) {
+                        const nextMonth = (currentMonth + i) % 12;
+                        const nextYear = currentYear + Math.floor((currentMonth + i) / 12);
+                        
+                        candidateDate = getNthDayOfMonth(
+                            nextYear,
+                            nextMonth,
+                            schedule.dayOfWeek,
+                            schedule.weekOfMonth
+                        );
+                        
+                        if (candidateDate && candidateDate > today) {
+                            nextMeeting = candidateDate;
+                            break;
+                        }
+                    }
+                }
+                
+                // Display the next meeting date
+                if (nextMeeting) {
+                    const options = { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    };
+                    const formattedDate = nextMeeting.toLocaleDateString('en-US', options);
+                    document.getElementById('nextMeetingDate').textContent = formattedDate;
+                } else {
+                    document.getElementById('nextMeetingDate').textContent = 'Meeting date to be announced';
+                }
+                
+            } catch (error) {
+                console.error('Error loading meeting config:', error);
+                document.getElementById('nextMeetingDate').textContent = 'Unable to load meeting information';
+                document.getElementById('meetingSchedule').textContent = 'Please check back later';
+            }
+        }
+        
+        // Function to handle RSVP button click
+        function handleRSVP() {
+            alert('Thank you for your interest! Please contact us at hello@newportwriters.com to RSVP.');
+        }
+        
+        // Calculate and display the next meeting when page loads
+        document.addEventListener('DOMContentLoaded', calculateNextMeeting);
+    </script>
+</body>
+</html>
