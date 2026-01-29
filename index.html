@@ -9,11 +9,13 @@
     <!-- Pico.css via CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css">
     
+    <!-- Serif fonts for a literary feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
         /* Theme matching the-reflective-lens.com - warm, paper-like, reflective aesthetic */
-        
-        /* Import serif fonts for a literary feel */
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Merriweather:wght@300;400;700&display=swap');
         
         :root {
             /* Warm, paper-like color palette */
@@ -158,6 +160,12 @@
             box-shadow: 0 2px 6px rgba(139, 111, 71, 0.3);
         }
         
+        button:focus,
+        button:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+        
         /* Footer styling */
         footer {
             text-align: center;
@@ -174,6 +182,7 @@
         }
         
         /* Responsive adjustments */
+        /* Breakpoint for tablet and mobile devices */
         @media (max-width: 768px) {
             body {
                 font-size: 16px;
