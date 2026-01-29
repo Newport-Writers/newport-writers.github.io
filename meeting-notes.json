@@ -1,0 +1,31 @@
+{
+  "notes": [
+    {
+      "id": "2026-02-05",
+      "date": "2026-02-05",
+      "title": "February 2026 Meeting",
+      "attendees": 0,
+      "summary": "Meeting notes will be added here after the meeting.",
+      "topics": [],
+      "nextActions": []
+    },
+    {
+      "id": "2026-01-05",
+      "date": "2026-01-05",
+      "title": "January 2026 Meeting - Kickoff",
+      "attendees": 8,
+      "summary": "Our first meeting was a great success! We discussed our writing goals for 2026 and established a regular meeting schedule.",
+      "topics": [
+        "Introduction and member goals",
+        "Establishing meeting structure",
+        "Sharing current writing projects",
+        "Planning future workshops"
+      ],
+      "nextActions": [
+        "Create shared document for writing resources",
+        "Set up communication channel for the group",
+        "Research local venues for future events"
+      ]
+    }
+  ]
+}
