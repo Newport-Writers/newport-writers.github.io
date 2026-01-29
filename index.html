@@ -71,9 +71,31 @@
         
         /* Container refinements */
         main.container {
-            max-width: 800px;
+            max-width: 1200px;
             padding: 2rem 1.5rem;
             margin: 0 auto;
+        }
+        
+        /* Two-column layout for content and sidebar */
+        .content-wrapper {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        
+        .main-content {
+            flex: 1;
+            min-width: 0; /* Prevents flex item from overflowing */
+        }
+        
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-sticky {
+            position: sticky;
+            top: 2rem;
         }
         
         /* Hero section - warm and inviting */
@@ -84,10 +106,6 @@
             background: linear-gradient(180deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
             border-radius: 12px;
             box-shadow: 0 2px 8px var(--color-shadow);
-            margin-left: -1.5rem;
-            margin-right: -1.5rem;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
         }
         
         .hero h1 {
@@ -200,10 +218,20 @@
                 padding: 1.5rem 1rem;
             }
             
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .sidebar-sticky {
+                position: static;
+            }
+            
             .hero {
                 padding: 2rem 1rem;
-                margin-left: -1rem;
-                margin-right: -1rem;
             }
             
             .meeting-info {
@@ -308,48 +336,59 @@
             <p>A quiet space for writers, builders, and thinkers to create together in Jersey City.</p>
         </header>
 
-        <!-- About Section -->
-        <section id="about">
-            <h2>About Us</h2>
-            <p>
-                Newport Writers is a welcoming community for anyone who loves to write, create, and think. 
-                Whether you're working on a novel, crafting poetry, building a project, or simply exploring 
-                ideas, our monthly meetups provide a supportive environment to focus on your work alongside 
-                fellow creators.
-            </p>
-            <p>
-                We meet regularly in Jersey City to write together, share progress, and inspire one another. 
-                All experience levels are welcome—from seasoned authors to those just starting their creative journey.
-            </p>
-        </section>
+        <!-- Content wrapper for two-column layout -->
+        <div class="content-wrapper">
+            <!-- Main content column -->
+            <div class="main-content">
+                <!-- About Section -->
+                <section id="about">
+                    <h2>About Us</h2>
+                    <p>
+                        Newport Writers is a welcoming community for anyone who loves to write, create, and think. 
+                        Whether you're working on a novel, crafting poetry, building a project, or simply exploring 
+                        ideas, our monthly meetups provide a supportive environment to focus on your work alongside 
+                        fellow creators.
+                    </p>
+                    <p>
+                        We meet regularly in Jersey City to write together, share progress, and inspire one another. 
+                        All experience levels are welcome—from seasoned authors to those just starting their creative journey.
+                    </p>
+                </section>
 
-        <!-- Next Meeting Info -->
-        <section id="meeting">
-            <h2>Next Meeting</h2>
-            <div class="meeting-info">
-                <p class="next-meeting" id="nextMeetingDate">Calculating next meeting date...</p>
-                <p id="meetingSchedule"></p>
-            </div>
-            <div style="text-align: center; margin-top: 2rem;">
-                <button type="button" id="rsvpButton" onclick="handleRSVP()">RSVP for Next Meeting</button>
-            </div>
-        </section>
+                <!-- Next Meeting Info -->
+                <section id="meeting">
+                    <h2>Next Meeting</h2>
+                    <div class="meeting-info">
+                        <p class="next-meeting" id="nextMeetingDate">Calculating next meeting date...</p>
+                        <p id="meetingSchedule"></p>
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button type="button" id="rsvpButton" onclick="handleRSVP()">RSVP for Next Meeting</button>
+                    </div>
+                </section>
 
-        <!-- Meeting Notes Section -->
-        <section id="meeting-notes">
-            <h2>Meeting Notes</h2>
-            <div id="meetingNotesContainer" aria-live="polite" aria-busy="true">
-                <p class="loading-message">Loading meeting notes...</p>
+                <!-- Meeting Notes Section -->
+                <section id="meeting-notes">
+                    <h2>Meeting Notes</h2>
+                    <div id="meetingNotesContainer" aria-live="polite" aria-busy="true">
+                        <p class="loading-message">Loading meeting notes...</p>
+                    </div>
+                </section>
             </div>
-        </section>
 
-        <!-- Members Section -->
-        <section id="members">
-            <h2>Our Members</h2>
-            <div id="membersContainer" aria-live="polite" aria-busy="true">
-                <p class="loading-message">Loading member information...</p>
-            </div>
-        </section>
+            <!-- Sidebar with Members Section -->
+            <aside class="sidebar">
+                <div class="sidebar-sticky">
+                    <!-- Members Section -->
+                    <section id="members">
+                        <h2>Our Members</h2>
+                        <div id="membersContainer" aria-live="polite" aria-busy="true">
+                            <p class="loading-message">Loading member information...</p>
+                        </div>
+                    </section>
+                </div>
+            </aside>
+        </div>
 
         <!-- Footer -->
         <footer>
