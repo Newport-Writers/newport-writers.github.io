@@ -1,0 +1,8 @@
+{
+  "meetingSchedule": {
+    "dayOfWeek": 3,
+    "time": "19:00",
+    "weekOfMonth": 2,
+    "description": "Second Wednesday of each month at 7:00 PM"
+  }
+}
