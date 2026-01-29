@@ -338,7 +338,7 @@
         <!-- Meeting Notes Section -->
         <section id="meeting-notes">
             <h2>Meeting Notes</h2>
-            <div id="meetingNotesContainer">
+            <div id="meetingNotesContainer" aria-live="polite" aria-busy="true">
                 <p class="loading-message">Loading meeting notes...</p>
             </div>
         </section>
@@ -346,7 +346,7 @@
         <!-- Members Section -->
         <section id="members">
             <h2>Our Members</h2>
-            <div id="membersContainer">
+            <div id="membersContainer" aria-live="polite" aria-busy="true">
                 <p class="loading-message">Loading member information...</p>
             </div>
         </section>
@@ -470,18 +470,42 @@
             alert('Thank you for your interest! Please contact us at hello@newportwriters.com to RSVP.');
         }
         
+        // Utility function to safely escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Utility function to validate and format dates
+        function formatDate(dateString, options) {
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return 'Date unavailable';
+                }
+                return date.toLocaleDateString('en-US', options);
+            } catch (error) {
+                console.error('Error formatting date:', error);
+                return 'Date unavailable';
+            }
+        }
+        
         // Function to load and display meeting notes
         async function loadMeetingNotes() {
+            const container = document.getElementById('meetingNotesContainer');
+            container.setAttribute('aria-busy', 'true');
+            
             try {
                 const response = await fetch('meeting-notes.json');
                 if (!response.ok) {
                     throw new Error('Failed to fetch meeting notes');
                 }
                 const data = await response.json();
-                const container = document.getElementById('meetingNotesContainer');
                 
                 if (!data.notes || data.notes.length === 0) {
                     container.innerHTML = '<p class="loading-message">No meeting notes available yet.</p>';
+                    container.setAttribute('aria-busy', 'false');
                     return;
                 }
                 
@@ -491,18 +515,21 @@
                 // Build HTML for each note
                 let html = '';
                 sortedNotes.forEach(note => {
-                    const noteDate = new Date(note.date);
-                    const formattedDate = noteDate.toLocaleDateString('en-US', { 
+                    const formattedDate = formatDate(note.date, { 
                         year: 'numeric', 
                         month: 'long', 
                         day: 'numeric' 
                     });
                     
+                    const title = escapeHtml(note.title);
+                    const summary = escapeHtml(note.summary);
+                    const attendeesCount = note.attendees > 0 ? `<span class="attendees-count">${note.attendees} attendees</span>` : '';
+                    
                     html += `
                         <div class="note-card">
-                            <h3>${note.title}${note.attendees > 0 ? '<span class="attendees-count">' + note.attendees + ' attendees</span>' : ''}</h3>
+                            <h3>${title}${attendeesCount}</h3>
                             <p class="note-date">${formattedDate}</p>
-                            <p class="note-summary">${note.summary}</p>
+                            <p class="note-summary">${summary}</p>
                     `;
                     
                     if (note.topics && note.topics.length > 0) {
@@ -510,7 +537,7 @@
                             <div class="note-topics">
                                 <h4>Topics Discussed:</h4>
                                 <ul>
-                                    ${note.topics.map(topic => `<li>${topic}</li>`).join('')}
+                                    ${note.topics.map(topic => `<li>${escapeHtml(topic)}</li>`).join('')}
                                 </ul>
                             </div>
                         `;
@@ -521,7 +548,7 @@
                             <div class="note-actions">
                                 <h4>Next Actions:</h4>
                                 <ul>
-                                    ${note.nextActions.map(action => `<li>${action}</li>`).join('')}
+                                    ${note.nextActions.map(action => `<li>${escapeHtml(action)}</li>`).join('')}
                                 </ul>
                             </div>
                         `;
@@ -531,26 +558,31 @@
                 });
                 
                 container.innerHTML = html;
+                container.setAttribute('aria-busy', 'false');
                 
             } catch (error) {
                 console.error('Error loading meeting notes:', error);
-                document.getElementById('meetingNotesContainer').innerHTML = 
+                container.innerHTML = 
                     '<p class="error-message">Unable to load meeting notes. Please try again later.</p>';
+                container.setAttribute('aria-busy', 'false');
             }
         }
         
         // Function to load and display members
         async function loadMembers() {
+            const container = document.getElementById('membersContainer');
+            container.setAttribute('aria-busy', 'true');
+            
             try {
                 const response = await fetch('members.json');
                 if (!response.ok) {
                     throw new Error('Failed to fetch members');
                 }
                 const data = await response.json();
-                const container = document.getElementById('membersContainer');
                 
                 if (!data.members || data.members.length === 0) {
                     container.innerHTML = '<p class="loading-message">No member information available yet.</p>';
+                    container.setAttribute('aria-busy', 'false');
                     return;
                 }
                 
@@ -561,40 +593,47 @@
                 
                 if (activeMembers.length === 0) {
                     container.innerHTML = '<p class="loading-message">No active members to display.</p>';
+                    container.setAttribute('aria-busy', 'false');
                     return;
                 }
                 
                 // Build HTML for each member
                 let html = '';
                 activeMembers.forEach(member => {
-                    const joinDate = new Date(member.joinDate);
-                    const formattedDate = joinDate.toLocaleDateString('en-US', { 
+                    const formattedDate = formatDate(member.joinDate, { 
                         year: 'numeric', 
                         month: 'long'
                     });
                     
+                    const name = escapeHtml(member.name);
+                    const bio = escapeHtml(member.bio);
+                    
                     html += `
                         <div class="member-card">
-                            <h3>${member.name}</h3>
+                            <h3>${name}</h3>
                             <p class="member-join-date">Member since ${formattedDate}</p>
-                            <p class="member-bio">${member.bio}</p>
+                            <p class="member-bio">${bio}</p>
                         </div>
                     `;
                 });
                 
                 container.innerHTML = html;
+                container.setAttribute('aria-busy', 'false');
                 
             } catch (error) {
                 console.error('Error loading members:', error);
-                document.getElementById('membersContainer').innerHTML = 
+                container.innerHTML = 
                     '<p class="error-message">Unable to load member information. Please try again later.</p>';
+                container.setAttribute('aria-busy', 'false');
             }
         }
         
-        // Calculate and display the next meeting when page loads
-        document.addEventListener('DOMContentLoaded', calculateNextMeeting);
-        document.addEventListener('DOMContentLoaded', loadMeetingNotes);
-        document.addEventListener('DOMContentLoaded', loadMembers);
+        // Initialize all functionality when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateNextMeeting();
+            loadMeetingNotes();
+            loadMembers();
+        });
     </script>
 </body>
 </html>
