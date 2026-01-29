@@ -1,0 +1,11 @@
+{
+  "members": [
+    {
+      "id": "member-1",
+      "name": "Member Name",
+      "bio": "Short bio will be added here.",
+      "joinDate": "2026-01",
+      "active": true
+    }
+  ]
+}

@@ -226,6 +226,78 @@
             background-color: var(--color-accent);
             color: #fff;
         }
+        
+        /* Meeting notes and member cards styling */
+        .note-card, .member-card {
+            background: var(--color-bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 2px 6px var(--color-shadow);
+        }
+        
+        .note-card h3, .member-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--color-accent);
+            font-size: 1.3rem;
+        }
+        
+        .note-date, .member-join-date {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-bottom: 0.75rem;
+        }
+        
+        .note-summary, .member-bio {
+            color: var(--color-text-secondary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .note-topics, .note-actions {
+            margin-top: 1rem;
+        }
+        
+        .note-topics h4, .note-actions h4 {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-primary);
+        }
+        
+        .note-topics ul, .note-actions ul {
+            margin: 0.5rem 0 0 1.5rem;
+            padding: 0;
+        }
+        
+        .note-topics li, .note-actions li {
+            color: var(--color-text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .attendees-count {
+            display: inline-block;
+            background: var(--color-accent);
+            color: #fff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .loading-message, .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+        
+        .error-message {
+            color: #c44;
+        }
     </style>
 </head>
 <body>
@@ -260,6 +332,22 @@
             </div>
             <div style="text-align: center; margin-top: 2rem;">
                 <button type="button" id="rsvpButton" onclick="handleRSVP()">RSVP for Next Meeting</button>
+            </div>
+        </section>
+
+        <!-- Meeting Notes Section -->
+        <section id="meeting-notes">
+            <h2>Meeting Notes</h2>
+            <div id="meetingNotesContainer">
+                <p class="loading-message">Loading meeting notes...</p>
+            </div>
+        </section>
+
+        <!-- Members Section -->
+        <section id="members">
+            <h2>Our Members</h2>
+            <div id="membersContainer">
+                <p class="loading-message">Loading member information...</p>
             </div>
         </section>
 
@@ -382,8 +470,131 @@
             alert('Thank you for your interest! Please contact us at hello@newportwriters.com to RSVP.');
         }
         
+        // Function to load and display meeting notes
+        async function loadMeetingNotes() {
+            try {
+                const response = await fetch('meeting-notes.json');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch meeting notes');
+                }
+                const data = await response.json();
+                const container = document.getElementById('meetingNotesContainer');
+                
+                if (!data.notes || data.notes.length === 0) {
+                    container.innerHTML = '<p class="loading-message">No meeting notes available yet.</p>';
+                    return;
+                }
+                
+                // Sort notes by date, newest first
+                const sortedNotes = data.notes.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Build HTML for each note
+                let html = '';
+                sortedNotes.forEach(note => {
+                    const noteDate = new Date(note.date);
+                    const formattedDate = noteDate.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    
+                    html += `
+                        <div class="note-card">
+                            <h3>${note.title}${note.attendees > 0 ? '<span class="attendees-count">' + note.attendees + ' attendees</span>' : ''}</h3>
+                            <p class="note-date">${formattedDate}</p>
+                            <p class="note-summary">${note.summary}</p>
+                    `;
+                    
+                    if (note.topics && note.topics.length > 0) {
+                        html += `
+                            <div class="note-topics">
+                                <h4>Topics Discussed:</h4>
+                                <ul>
+                                    ${note.topics.map(topic => `<li>${topic}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    if (note.nextActions && note.nextActions.length > 0) {
+                        html += `
+                            <div class="note-actions">
+                                <h4>Next Actions:</h4>
+                                <ul>
+                                    ${note.nextActions.map(action => `<li>${action}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    html += `</div>`;
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading meeting notes:', error);
+                document.getElementById('meetingNotesContainer').innerHTML = 
+                    '<p class="error-message">Unable to load meeting notes. Please try again later.</p>';
+            }
+        }
+        
+        // Function to load and display members
+        async function loadMembers() {
+            try {
+                const response = await fetch('members.json');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch members');
+                }
+                const data = await response.json();
+                const container = document.getElementById('membersContainer');
+                
+                if (!data.members || data.members.length === 0) {
+                    container.innerHTML = '<p class="loading-message">No member information available yet.</p>';
+                    return;
+                }
+                
+                // Filter active members and sort by join date
+                const activeMembers = data.members
+                    .filter(member => member.active)
+                    .sort((a, b) => new Date(a.joinDate) - new Date(b.joinDate));
+                
+                if (activeMembers.length === 0) {
+                    container.innerHTML = '<p class="loading-message">No active members to display.</p>';
+                    return;
+                }
+                
+                // Build HTML for each member
+                let html = '';
+                activeMembers.forEach(member => {
+                    const joinDate = new Date(member.joinDate);
+                    const formattedDate = joinDate.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long'
+                    });
+                    
+                    html += `
+                        <div class="member-card">
+                            <h3>${member.name}</h3>
+                            <p class="member-join-date">Member since ${formattedDate}</p>
+                            <p class="member-bio">${member.bio}</p>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading members:', error);
+                document.getElementById('membersContainer').innerHTML = 
+                    '<p class="error-message">Unable to load member information. Please try again later.</p>';
+            }
+        }
+        
         // Calculate and display the next meeting when page loads
         document.addEventListener('DOMContentLoaded', calculateNextMeeting);
+        document.addEventListener('DOMContentLoaded', loadMeetingNotes);
+        document.addEventListener('DOMContentLoaded', loadMembers);
     </script>
 </body>
 </html>
