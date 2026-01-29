@@ -4,28 +4,28 @@
       "id": "member-1",
       "name": "Abhijeet",
       "bio": "Abhijeet is a non-fiction writer working on a sci-fi novel. He loves exploring themes of technology, humanity and Indian Philosophy.",
-      "joinDate": "2026-01",
+      "joinDate": "2026-02",
       "active": true
     },
     {
       "id": "member-2",
       "name": "Saumya",
       "bio": "Add your bio!",
-      "joinDate": "2026-01",
+      "joinDate": "2026-02",
       "active": true
     },
     {
       "id": "member-3",
       "name": "Shantala",
       "bio": "Add your bio!",
-      "joinDate": "2026-01",
+      "joinDate": "2026-02",
       "active": true
     },
     {
       "id": "member-4",
       "name": "Srini",
       "bio": "Add your bio!",
-      "joinDate": "2026-01",
+      "joinDate": "2026-02",
       "active": true
     }
   ]
