@@ -9,33 +9,222 @@
     <!-- Pico.css via CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css">
     
+    <!-- Serif fonts for a literary feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Custom background color matching the-reflective-lens.com */
-        body {
-            background-color: #faf8f5;
+        /* Theme matching the-reflective-lens.com - warm, paper-like, reflective aesthetic */
+        
+        :root {
+            /* Warm, paper-like color palette */
+            --color-bg-primary: #faf8f5;
+            --color-bg-secondary: #f0ede8;
+            --color-bg-tertiary: #e8e4dd;
+            --color-text-primary: #2a2420;
+            --color-text-secondary: #5a534c;
+            --color-text-muted: #8a837c;
+            --color-accent: #8b6f47;
+            --color-accent-hover: #6f5839;
+            --color-border: #d8d2ca;
+            --color-shadow: rgba(42, 36, 32, 0.08);
         }
         
+        body {
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 17px;
+            line-height: 1.75;
+            letter-spacing: 0.01em;
+        }
+        
+        /* Typography refinements */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+        }
+        
+        p {
+            color: var(--color-text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Container refinements */
+        main.container {
+            max-width: 800px;
+            padding: 2rem 1.5rem;
+            margin: 0 auto;
+        }
+        
+        /* Hero section - warm and inviting */
         .hero {
             text-align: center;
-            padding: 2rem 0;
+            padding: 3rem 0 2rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(180deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--color-shadow);
+            margin-left: -1.5rem;
+            margin-right: -1.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
+        
+        .hero h1 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--color-text-primary);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--color-text-secondary);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Section styling */
+        section {
+            margin-bottom: 3rem;
+        }
+        
+        /* Meeting info card - warm and inviting */
         .meeting-info {
-            background-color: #f0ede8;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin: 1rem 0;
+            background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
             text-align: center;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 4px 12px var(--color-shadow);
         }
+        
         .next-meeting {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--pico-primary);
+            font-size: 1.4rem;
+            font-weight: 600;
+            font-family: 'Lora', Georgia, serif;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
         }
+        
+        #meetingSchedule {
+            color: var(--color-text-secondary);
+            font-size: 1rem;
+        }
+        
+        /* Button styling - matching theme */
+        button {
+            background-color: var(--color-accent);
+            color: #fff;
+            border: none;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(139, 111, 71, 0.3);
+            letter-spacing: 0.02em;
+        }
+        
+        button:hover {
+            background-color: var(--color-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 111, 71, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(139, 111, 71, 0.3);
+        }
+        
+        button:focus,
+        button:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+        
+        /* Footer styling */
         footer {
             text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
-            border-top: 1px solid var(--pico-muted-border-color);
+            padding: 2.5rem 0 1.5rem;
+            margin-top: 4rem;
+            border-top: 2px solid var(--color-border);
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+        
+        footer p {
+            color: var(--color-text-muted);
+            margin-bottom: 0;
+        }
+        
+        /* Responsive adjustments */
+        /* Breakpoint for tablet and mobile devices */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            main.container {
+                padding: 1.5rem 1rem;
+            }
+            
+            .hero {
+                padding: 2rem 1rem;
+                margin-left: -1rem;
+                margin-right: -1rem;
+            }
+            
+            .meeting-info {
+                padding: 1.5rem;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        /* Subtle text selection styling */
+        ::selection {
+            background-color: var(--color-accent);
+            color: #fff;
+        }
+        
+        ::-moz-selection {
+            background-color: var(--color-accent);
+            color: #fff;
         }
     </style>
 </head>
