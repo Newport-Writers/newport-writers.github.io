@@ -2,22 +2,29 @@
   "members": [
     {
       "id": "member-1",
-      "name": "Alex Rivera",
-      "bio": "Alex is a fiction writer working on a sci-fi novel. They love exploring themes of technology and humanity.",
+      "name": "Abhijeet",
+      "bio": "Alex is a non-fiction writer working on a sci-fi novel. He loves exploring themes of technology, humanity and Indian Philosophy.",
       "joinDate": "2026-01",
       "active": true
     },
     {
       "id": "member-2",
-      "name": "Sam Chen",
-      "bio": "Sam writes poetry and short stories. They're particularly interested in capturing everyday moments with clarity and depth.",
+      "name": "Saumya",
+      "bio": "Add your bio!",
       "joinDate": "2026-01",
       "active": true
     },
     {
-      "id": "placeholder",
-      "name": "Your Name Here",
-      "bio": "Join us and add your bio! Contact hello@newportwriters.com to become a member.",
+      "id": "member-3",
+      "name": "Shantala",
+      "bio": "Add your bio!",
+      "joinDate": "2026-01",
+      "active": true
+    },
+    {
+      "id": "member-4",
+      "name": "Srini",
+      "bio": "Add your bio!",
       "joinDate": "2026-01",
       "active": true
     }
