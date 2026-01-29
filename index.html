@@ -65,7 +65,7 @@
                 <p id="meetingSchedule"></p>
             </div>
             <div style="text-align: center; margin-top: 2rem;">
-                <button id="rsvpButton" onclick="handleRSVP()">RSVP for Next Meeting</button>
+                <button type="button" id="rsvpButton" onclick="handleRSVP()">RSVP for Next Meeting</button>
             </div>
         </section>
 
@@ -81,6 +81,9 @@
             try {
                 // Fetch the meeting configuration
                 const response = await fetch('meeting-config.json');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch meeting configuration');
+                }
                 const config = await response.json();
                 const schedule = config.meetingSchedule;
                 
@@ -88,21 +91,26 @@
                 const scheduleElement = document.getElementById('meetingSchedule');
                 scheduleElement.textContent = schedule.description;
                 
-                // Get current date
-                const today = new Date();
-                const currentMonth = today.getMonth();
-                const currentYear = today.getFullYear();
+                // Get current date and time
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+                
+                // Parse meeting time from config (e.g., "19:00")
+                const [hours, minutes] = schedule.time.split(':').map(Number);
                 
                 // Function to find the nth occurrence of a day of week in a month
+                // dayOfWeek: 0-6 (Sunday-Saturday), n: 1-5 (first, second, etc.)
                 function getNthDayOfMonth(year, month, dayOfWeek, n) {
                     const firstDay = new Date(year, month, 1);
                     const firstDayOfWeek = firstDay.getDay();
                     
-                    // Calculate the date of the first occurrence of the target day
+                    // Calculate days until the first occurrence of target day of week
+                    // e.g., if first day is Tuesday (2) and we want Wednesday (3), we need 1 day
                     let daysUntilTarget = (dayOfWeek - firstDayOfWeek + 7) % 7;
                     let firstOccurrence = 1 + daysUntilTarget;
                     
-                    // Calculate the nth occurrence
+                    // Calculate the nth occurrence by adding (n-1) weeks
                     let targetDate = firstOccurrence + (n - 1) * 7;
                     
                     // Check if this date exists in the month
@@ -111,11 +119,12 @@
                         return null; // Date doesn't exist in this month
                     }
                     
-                    return new Date(year, month, targetDate);
+                    return new Date(year, month, targetDate, hours, minutes);
                 }
                 
                 // Try to find the next meeting
                 let nextMeeting = null;
+                const MAX_MONTHS_TO_CHECK = 12;
                 
                 // Check current month
                 let candidateDate = getNthDayOfMonth(
@@ -125,15 +134,16 @@
                     schedule.weekOfMonth
                 );
                 
-                if (candidateDate && candidateDate > today) {
+                // Check if candidate date is in the future (including time)
+                if (candidateDate && candidateDate > now) {
                     nextMeeting = candidateDate;
                 }
                 
                 // If no valid date in current month, check next months
                 if (!nextMeeting) {
-                    for (let i = 1; i <= 12; i++) {
-                        const nextMonth = (currentMonth + i) % 12;
-                        const nextYear = currentYear + Math.floor((currentMonth + i) / 12);
+                    for (let monthsAhead = 1; monthsAhead <= MAX_MONTHS_TO_CHECK; monthsAhead++) {
+                        const nextMonth = (currentMonth + monthsAhead) % 12;
+                        const nextYear = currentYear + Math.floor((currentMonth + monthsAhead) / 12);
                         
                         candidateDate = getNthDayOfMonth(
                             nextYear,
@@ -142,7 +152,8 @@
                             schedule.weekOfMonth
                         );
                         
-                        if (candidateDate && candidateDate > today) {
+                        // Check if candidate date is in the future (including time)
+                        if (candidateDate && candidateDate > now) {
                             nextMeeting = candidateDate;
                             break;
                         }
@@ -155,7 +166,9 @@
                         weekday: 'long', 
                         year: 'numeric', 
                         month: 'long', 
-                        day: 'numeric' 
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit'
                     };
                     const formattedDate = nextMeeting.toLocaleDateString('en-US', options);
                     document.getElementById('nextMeetingDate').textContent = formattedDate;
@@ -166,7 +179,7 @@
             } catch (error) {
                 console.error('Error loading meeting config:', error);
                 document.getElementById('nextMeetingDate').textContent = 'Unable to load meeting information';
-                document.getElementById('meetingSchedule').textContent = 'Please check back later';
+                document.getElementById('meetingSchedule').textContent = 'Please check your internet connection or try again later';
             }
         }
         
