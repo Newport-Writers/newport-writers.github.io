@@ -1,6 +1,18 @@
 {
   "notes": [
     {
+      "id": "2026-03-01",
+      "date": "2026-03-01",
+      "title": "March 2026 Meeting - Upcoming",
+      "attendees": 0,
+      "summary": "Next month's meeting - details to be added after the meeting.",
+      "topics": [
+        "Poetry workshop",
+        "Spring writing challenge"
+      ],
+      "nextActions": []
+    },
+    {
       "id": "2026-02-01",
       "date": "2026-02-01",
       "title": "Feb 2026 Meeting - Kickoff",
@@ -16,7 +28,8 @@
         "Create shared document for writing resources",
         "Set up communication channel for the group",
         "Research local venues for future events"
-      ]
+      ],
+      "outcomeFile": "outcomes/2026-02-01.md"
     }
   ]
 }
