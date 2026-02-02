@@ -25,7 +25,8 @@ Meeting notes are stored in the `meeting-notes.json` file. To add a new meeting 
     "Schedule poetry workshop for March",
     "Create shared document for project ideas",
     "Plan community reading event"
-  ]
+  ],
+  "outcomeFile": "outcomes/2026-02-05.md"
 }
 ```
 
@@ -37,8 +38,64 @@ Meeting notes are stored in the `meeting-notes.json` file. To add a new meeting 
 - **summary**: Brief summary of the meeting
 - **topics**: Array of topics discussed (optional)
 - **nextActions**: Array of action items from the meeting (optional)
+- **outcomeFile**: Path to markdown file with detailed meeting outcome (optional)
 
 The most recent meetings will appear first on the website.
+
+## Adding Meeting Outcomes
+
+Meeting outcomes are detailed markdown files stored in the `outcomes/` directory. They provide a more comprehensive summary after the meeting has concluded.
+
+### Creating an Outcome File:
+
+1. Create a new markdown file in the `outcomes/` directory
+2. Name it with the meeting date (e.g., `2026-02-05.md`)
+3. Write your outcome content using markdown formatting
+
+### Example Outcome File Structure:
+
+```markdown
+# Meeting Outcome - February 2026
+
+## Summary
+Brief overview of what happened at the meeting.
+
+## Key Achievements
+- Achievement 1
+- Achievement 2
+- Achievement 3
+
+## Writing Progress
+Details about members' writing projects and progress shared.
+
+## Next Steps
+- Action item 1
+- Action item 2
+
+## Member Feedback
+Any feedback or highlights from attendees.
+```
+
+### Markdown Formatting Supported:
+- **Headers**: Use `#`, `##`, `###` for different heading levels
+- **Bold**: Use `**bold text**`
+- **Italic**: Use `*italic text*`
+- **Lists**: Use `-` for bullet points
+
+### Linking an Outcome to a Meeting:
+
+Add the `outcomeFile` field to the corresponding meeting entry in `meeting-notes.json`:
+
+```json
+{
+  "id": "2026-02-05",
+  "date": "2026-02-05",
+  ...
+  "outcomeFile": "outcomes/2026-02-05.md"
+}
+```
+
+The outcome will automatically appear in the meeting notes card on the website.
 
 ## Adding Members
 

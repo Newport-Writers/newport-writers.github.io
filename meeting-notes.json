@@ -16,7 +16,8 @@
         "Create shared document for writing resources",
         "Set up communication channel for the group",
         "Research local venues for future events"
-      ]
+      ],
+      "outcomeFile": "outcomes/2026-02-01.md"
     }
   ]
 }
