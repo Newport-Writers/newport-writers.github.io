@@ -603,9 +603,8 @@
             
             // Convert unordered lists
             html = html.replace(/^\- (.+$)/gim, '<li>$1</li>');
-            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
             
-            // Convert line breaks to paragraphs
+            // Convert line breaks to paragraphs and wrap lists
             const lines = html.split('\n');
             let inList = false;
             let result = [];
@@ -613,13 +612,29 @@
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 
-                if (line.startsWith('<h') || line.startsWith('<ul') || line.startsWith('</ul') || line.startsWith('<li')) {
+                if (line.startsWith('<li>')) {
+                    if (!inList) {
+                        result.push('<ul>');
+                        inList = true;
+                    }
                     result.push(line);
-                    if (line.startsWith('<ul')) inList = true;
-                    if (line.startsWith('</ul')) inList = false;
-                } else if (line.length > 0 && !inList) {
-                    result.push('<p>' + line + '</p>');
+                } else {
+                    if (inList) {
+                        result.push('</ul>');
+                        inList = false;
+                    }
+                    
+                    if (line.startsWith('<h') || line.length === 0) {
+                        result.push(line);
+                    } else if (line.length > 0) {
+                        result.push('<p>' + line + '</p>');
+                    }
                 }
+            }
+            
+            // Close any open list at the end
+            if (inList) {
+                result.push('</ul>');
             }
             
             return result.join('\n');
